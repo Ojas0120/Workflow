@@ -1,0 +1,77 @@
+{
+  "components": [
+    {
+      "text": "# New order\nSynthetic data only. Use a mock payment token, never a real card number.",
+      "type": "text",
+      "id": "Field_019"
+    },
+    {
+      "label": "Customer reference",
+      "type": "textfield",
+      "id": "Field_020",
+      "key": "customerRef",
+      "validate": {
+        "required": true
+      },
+      "description": "CUST-001 (Gold), CUST-002 (Silver), anything else = Standard"
+    },
+    {
+      "label": "Product ID",
+      "type": "textfield",
+      "id": "Field_021",
+      "key": "productId",
+      "validate": {
+        "required": true
+      },
+      "description": "PROD-100, PROD-200, PROD-300"
+    },
+    {
+      "label": "Quantity",
+      "type": "number",
+      "id": "Field_022",
+      "key": "quantity",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Delivery preference",
+      "type": "select",
+      "id": "Field_023",
+      "key": "deliveryPreference",
+      "values": [
+        {
+          "label": "Standard",
+          "value": "Standard"
+        },
+        {
+          "label": "Express",
+          "value": "Express"
+        },
+        {
+          "label": "Same-day",
+          "value": "Same-day"
+        }
+      ],
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "Standard"
+    },
+    {
+      "label": "Payment token (mock)",
+      "type": "textfield",
+      "id": "Field_024",
+      "key": "paymentToken",
+      "validate": {
+        "required": true
+      },
+      "description": "tok_test_ok | tok_test_declined"
+    }
+  ],
+  "type": "default",
+  "id": "order-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}

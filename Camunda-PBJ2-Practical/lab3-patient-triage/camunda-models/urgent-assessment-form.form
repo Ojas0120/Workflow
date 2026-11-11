@@ -1,0 +1,44 @@
+{
+  "components": [
+    {
+      "text": "# URGENT ASSESSMENT (simulated)\nImmediate human assessment required in this simulation.",
+      "type": "text",
+      "id": "Field_042"
+    },
+    {
+      "label": "Patient reference",
+      "type": "textfield",
+      "id": "Field_043",
+      "key": "patientRef",
+      "readonly": true
+    },
+    {
+      "label": "Symptoms",
+      "type": "textarea",
+      "id": "Field_044",
+      "key": "symptomsSummary",
+      "readonly": true
+    },
+    {
+      "label": "Triage rationale",
+      "type": "textfield",
+      "id": "Field_045",
+      "key": "rationale",
+      "readonly": true
+    },
+    {
+      "label": "Assessment notes (synthetic)",
+      "type": "textarea",
+      "id": "Field_046",
+      "key": "assessmentNotes",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "urgent-assessment-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}

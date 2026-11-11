@@ -1,0 +1,53 @@
+{
+  "components": [
+    {
+      "text": "# No suitable appointment slot\nAuthorised staff to arrange a manual slot or waitlist the patient.",
+      "type": "text",
+      "id": "Field_053"
+    },
+    {
+      "label": "Patient reference",
+      "type": "textfield",
+      "id": "Field_054",
+      "key": "patientRef",
+      "readonly": true
+    },
+    {
+      "label": "Department",
+      "type": "textfield",
+      "id": "Field_055",
+      "key": "department",
+      "readonly": true
+    },
+    {
+      "label": "Staff action",
+      "type": "select",
+      "id": "Field_056",
+      "key": "staffAction",
+      "values": [
+        {
+          "label": "Manual slot arranged",
+          "value": "Manual slot arranged"
+        },
+        {
+          "label": "Added to waitlist",
+          "value": "Added to waitlist"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Manual slot / waitlist note",
+      "type": "textfield",
+      "id": "Field_057",
+      "key": "staffNote"
+    }
+  ],
+  "type": "default",
+  "id": "no-slot-review-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}

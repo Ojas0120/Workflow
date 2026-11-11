@@ -1,0 +1,12 @@
+{
+  "patientRef": "PT-SYN-0002",
+  "department": "General Medicine",
+  "preferredDate": "2026-11-10",
+  "timeOfDay": "Any",
+  "symptomsSummary": "Severe persistent headache (synthetic)",
+  "severity": "Severe",
+  "symptomDays": 3,
+  "ageGroup": "Adult",
+  "redFlagBreathing": false,
+  "redFlagChestPain": false
+}

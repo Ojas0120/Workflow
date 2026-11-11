@@ -1,0 +1,11 @@
+{
+  "applicantId": "APP-1003",
+  "applicantName": "Meena Iyer",
+  "age": 38,
+  "requestedAmount": 800000,
+  "loanTermMonths": 48,
+  "monthlyIncome": 80000,
+  "existingMonthlyDebt": 5000,
+  "employmentYears": 4,
+  "simulateWorkerFailure": false
+}

@@ -1,0 +1,11 @@
+{
+  "applicantId": "APP-1002",
+  "applicantName": "Ravi Kumar",
+  "age": 45,
+  "requestedAmount": 300000,
+  "loanTermMonths": 36,
+  "monthlyIncome": 40000,
+  "existingMonthlyDebt": 5000,
+  "employmentYears": 3,
+  "simulateWorkerFailure": false
+}

@@ -1,0 +1,12 @@
+{
+  "patientRef": "PT-SYN-0003",
+  "department": "General Medicine",
+  "preferredDate": "2026-11-10",
+  "timeOfDay": "Any",
+  "symptomsSummary": "Shortness of breath (synthetic)",
+  "severity": "Moderate",
+  "symptomDays": 2,
+  "ageGroup": "Adult",
+  "redFlagBreathing": true,
+  "redFlagChestPain": false
+}

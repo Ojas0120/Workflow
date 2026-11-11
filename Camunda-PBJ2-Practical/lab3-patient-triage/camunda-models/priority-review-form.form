@@ -1,0 +1,60 @@
+{
+  "components": [
+    {
+      "text": "# Priority staff review",
+      "type": "text",
+      "id": "Field_047"
+    },
+    {
+      "label": "Patient reference",
+      "type": "textfield",
+      "id": "Field_048",
+      "key": "patientRef",
+      "readonly": true
+    },
+    {
+      "label": "Symptoms",
+      "type": "textarea",
+      "id": "Field_049",
+      "key": "symptomsSummary",
+      "readonly": true
+    },
+    {
+      "label": "Triage rationale",
+      "type": "textfield",
+      "id": "Field_050",
+      "key": "rationale",
+      "readonly": true
+    },
+    {
+      "label": "Review outcome",
+      "type": "select",
+      "id": "Field_051",
+      "key": "priorityReviewOutcome",
+      "values": [
+        {
+          "label": "Proceed to booking",
+          "value": "Proceed to booking"
+        },
+        {
+          "label": "Refer elsewhere",
+          "value": "Refer elsewhere"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Reviewer comment",
+      "type": "textarea",
+      "id": "Field_052",
+      "key": "reviewComment"
+    }
+  ],
+  "type": "default",
+  "id": "priority-review-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}

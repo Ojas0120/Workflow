@@ -1,0 +1,94 @@
+{
+  "components": [
+    {
+      "text": "# Loan application\nSynthetic data only - do not enter real personal information.",
+      "type": "text",
+      "id": "Field_001"
+    },
+    {
+      "label": "Applicant ID",
+      "type": "textfield",
+      "id": "Field_002",
+      "key": "applicantId",
+      "validate": {
+        "required": true
+      },
+      "description": "e.g. APP-1001 (see test table)"
+    },
+    {
+      "label": "Applicant name",
+      "type": "textfield",
+      "id": "Field_003",
+      "key": "applicantName",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Age",
+      "type": "number",
+      "id": "Field_004",
+      "key": "age",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Requested loan amount (INR)",
+      "type": "number",
+      "id": "Field_005",
+      "key": "requestedAmount",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Loan term (months)",
+      "type": "number",
+      "id": "Field_006",
+      "key": "loanTermMonths",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Monthly income (INR)",
+      "type": "number",
+      "id": "Field_007",
+      "key": "monthlyIncome",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Existing monthly debt payments (INR)",
+      "type": "number",
+      "id": "Field_008",
+      "key": "existingMonthlyDebt",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Years in current employment",
+      "type": "number",
+      "id": "Field_009",
+      "key": "employmentYears",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Test hook: make the validation worker fail (incident demo)",
+      "type": "checkbox",
+      "id": "Field_010",
+      "key": "simulateWorkerFailure",
+      "description": "Leave unticked for normal runs. Tick it for Scenario 5, then fix in Operate."
+    }
+  ],
+  "type": "default",
+  "id": "loan-application-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}

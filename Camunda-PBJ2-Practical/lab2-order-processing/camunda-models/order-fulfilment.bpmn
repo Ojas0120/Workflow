@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_order-fulfilment" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:process id="order-fulfilment" name="E-Commerce Order Processing and Fulfilment" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_Order" name="Order received"><bpmn:extensionElements><zeebe:formDefinition formId="order-form" /></bpmn:extensionElements></bpmn:startEvent>
+    <bpmn:serviceTask id="Task_Validate" name="Validate order"><bpmn:extensionElements><zeebe:taskDefinition type="order-validate" retries="3" /></bpmn:extensionElements></bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_Valid" name="Order valid?" default="Flow_Valid_No"></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Invalid" name="Order invalid"></bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Inventory" name="Check inventory"><bpmn:extensionElements><zeebe:taskDefinition type="order-check-inventory" retries="3" /></bpmn:extensionElements></bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_Stock" name="Stock available?" default="Flow_Stock_No"></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_NoStock" name="Cannot fulfil: insufficient stock"></bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Total" name="Calculate order total"><bpmn:extensionElements><zeebe:taskDefinition type="order-calculate-total" retries="3" /></bpmn:extensionElements></bpmn:serviceTask>
+    <bpmn:businessRuleTask id="Task_Priority" name="Determine priority (DMN)"><bpmn:extensionElements><zeebe:calledDecision decisionId="order_priority" resultVariable="priorityResult" /></bpmn:extensionElements></bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="Gateway_HighValue" name="High-value order?" default="Flow_HV_No"></bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_Verify" name="Manual order verification (Tasklist)"><bpmn:extensionElements><zeebe:userTask /><zeebe:formDefinition formId="order-verification-form" /></bpmn:extensionElements></bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_Verified" name="Verified?" default="Flow_Ver_No"></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Cancelled" name="Order cancelled by reviewer"></bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Payment" name="Charge payment (REST Connector)"><bpmn:extensionElements><zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" /><zeebe:ioMapping><zeebe:input source="noAuth" target="authentication.type" /><zeebe:input source="POST" target="method" /><zeebe:input source="http://localhost:8082/api/payments/charge" target="url" /><zeebe:input source='={orderRef: orderRef, paymentToken: paymentToken, amount: orderTotal, currency: "INR"}' target="body" /><zeebe:input source="10" target="connectionTimeoutInSeconds" /><zeebe:input source="10" target="readTimeoutInSeconds" /></zeebe:ioMapping><zeebe:taskHeaders><zeebe:header key="resultVariable" value="paymentResponse" /><zeebe:header key="resultExpression" value="={paymentStatus: response.body.status, transactionId: response.body.transactionId, paymentMessage: response.body.message}" /><zeebe:header key="retryBackoff" value="PT0S" /></zeebe:taskHeaders></bpmn:extensionElements></bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_Payment" name="Payment approved?" default="Flow_Pay_No"></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Declined" name="Payment declined"></bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Fulfil" name="Reserve stock &amp; create shipment"><bpmn:extensionElements><zeebe:taskDefinition type="order-fulfil" retries="3" /></bpmn:extensionElements></bpmn:serviceTask>
+    <bpmn:endEvent id="End_Fulfilled" name="Order fulfilled"></bpmn:endEvent>
+    <bpmn:sequenceFlow id="F1" sourceRef="StartEvent_Order" targetRef="Task_Validate"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F2" sourceRef="Task_Validate" targetRef="Gateway_Valid"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Valid_No" sourceRef="Gateway_Valid" targetRef="End_Invalid" name="No"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F3" sourceRef="Gateway_Valid" targetRef="Task_Inventory" name="Yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=validationPassed = true</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F4" sourceRef="Task_Inventory" targetRef="Gateway_Stock"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Stock_No" sourceRef="Gateway_Stock" targetRef="End_NoStock" name="No"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F5" sourceRef="Gateway_Stock" targetRef="Task_Total" name="Yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=stockStatus = "IN_STOCK"</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F6" sourceRef="Task_Total" targetRef="Task_Priority"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F7" sourceRef="Task_Priority" targetRef="Gateway_HighValue"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F8" sourceRef="Gateway_HighValue" targetRef="Task_Verify" name="Yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=orderTotal &gt;= 50000</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_HV_No" sourceRef="Gateway_HighValue" targetRef="Task_Payment" name="No"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F9" sourceRef="Task_Verify" targetRef="Gateway_Verified"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Ver_No" sourceRef="Gateway_Verified" targetRef="End_Cancelled" name="No"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F10" sourceRef="Gateway_Verified" targetRef="Task_Payment" name="Yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=verificationDecision = "Approved"</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F11" sourceRef="Task_Payment" targetRef="Gateway_Payment"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F12" sourceRef="Gateway_Payment" targetRef="Task_Fulfil" name="Approved"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=paymentStatus = "APPROVED"</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Pay_No" sourceRef="Gateway_Payment" targetRef="End_Declined" name="Declined"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F13" sourceRef="Task_Fulfil" targetRef="End_Fulfilled"></bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="order-fulfilment">
+      <bpmndi:BPMNShape id="StartEvent_Order_di" bpmnElement="StartEvent_Order">
+        <dc:Bounds x="132" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="105" y="222" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Validate_di" bpmnElement="Task_Validate">
+        <dc:Bounds x="215" y="160" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Valid_di" bpmnElement="Gateway_Valid" isMarkerVisible="true">
+        <dc:Bounds x="375" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="355" y="230" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Invalid_di" bpmnElement="End_Invalid">
+        <dc:Bounds x="382" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="355" y="382" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Inventory_di" bpmnElement="Task_Inventory">
+        <dc:Bounds x="475" y="160" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Stock_di" bpmnElement="Gateway_Stock" isMarkerVisible="true">
+        <dc:Bounds x="635" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="615" y="230" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_NoStock_di" bpmnElement="End_NoStock">
+        <dc:Bounds x="642" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="615" y="382" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Total_di" bpmnElement="Task_Total">
+        <dc:Bounds x="735" y="160" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Priority_di" bpmnElement="Task_Priority">
+        <dc:Bounds x="875" y="160" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_HighValue_di" bpmnElement="Gateway_HighValue" isMarkerVisible="true">
+        <dc:Bounds x="1045" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1025" y="230" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Verify_di" bpmnElement="Task_Verify">
+        <dc:Bounds x="1155" y="70" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Verified_di" bpmnElement="Gateway_Verified" isMarkerVisible="true">
+        <dc:Bounds x="1325" y="85" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1305" y="140" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Cancelled_di" bpmnElement="End_Cancelled">
+        <dc:Bounds x="1332" y="2" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1305" y="42" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Payment_di" bpmnElement="Task_Payment">
+        <dc:Bounds x="1445" y="160" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Payment_di" bpmnElement="Gateway_Payment" isMarkerVisible="true">
+        <dc:Bounds x="1625" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1605" y="230" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Declined_di" bpmnElement="End_Declined">
+        <dc:Bounds x="1632" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1605" y="382" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Fulfil_di" bpmnElement="Task_Fulfil">
+        <dc:Bounds x="1745" y="160" width="110" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Fulfilled_di" bpmnElement="End_Fulfilled">
+        <dc:Bounds x="1922" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1895" y="222" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1">
+        <di:waypoint x="168" y="200" />
+        <di:waypoint x="215" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2">
+        <di:waypoint x="325" y="200" />
+        <di:waypoint x="375" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Valid_No_di" bpmnElement="Flow_Valid_No">
+        <di:waypoint x="400" y="225" />
+        <di:waypoint x="400" y="342" />
+        <bpmndi:BPMNLabel><dc:Bounds x="380" y="265" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3">
+        <di:waypoint x="425" y="200" />
+        <di:waypoint x="475" y="200" />
+        <bpmndi:BPMNLabel><dc:Bounds x="430" y="182" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4">
+        <di:waypoint x="585" y="200" />
+        <di:waypoint x="635" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Stock_No_di" bpmnElement="Flow_Stock_No">
+        <di:waypoint x="660" y="225" />
+        <di:waypoint x="660" y="342" />
+        <bpmndi:BPMNLabel><dc:Bounds x="640" y="265" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
+        <di:waypoint x="685" y="200" />
+        <di:waypoint x="735" y="200" />
+        <bpmndi:BPMNLabel><dc:Bounds x="690" y="182" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6">
+        <di:waypoint x="845" y="200" />
+        <di:waypoint x="875" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F7_di" bpmnElement="F7">
+        <di:waypoint x="985" y="200" />
+        <di:waypoint x="1045" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8">
+        <di:waypoint x="1070" y="175" />
+        <di:waypoint x="1070" y="110" />
+        <di:waypoint x="1155" y="110" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1050" y="124" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_HV_No_di" bpmnElement="Flow_HV_No">
+        <di:waypoint x="1095" y="200" />
+        <di:waypoint x="1445" y="200" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1250" y="182" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9">
+        <di:waypoint x="1265" y="110" />
+        <di:waypoint x="1325" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Ver_No_di" bpmnElement="Flow_Ver_No">
+        <di:waypoint x="1350" y="85" />
+        <di:waypoint x="1350" y="38" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1330" y="43" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+        <di:waypoint x="1375" y="110" />
+        <di:waypoint x="1500" y="110" />
+        <di:waypoint x="1500" y="160" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1417" y="92" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="1555" y="200" />
+        <di:waypoint x="1625" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+        <di:waypoint x="1675" y="200" />
+        <di:waypoint x="1745" y="200" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1690" y="182" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Pay_No_di" bpmnElement="Flow_Pay_No">
+        <di:waypoint x="1650" y="225" />
+        <di:waypoint x="1650" y="342" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1630" y="265" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
+        <di:waypoint x="1855" y="200" />
+        <di:waypoint x="1922" y="200" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

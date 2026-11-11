@@ -1,0 +1,12 @@
+{
+  "patientRef": "PT-SYN-0004",
+  "department": "Dermatology",
+  "preferredDate": "2026-11-10",
+  "timeOfDay": "Any",
+  "symptomsSummary": "Mild skin rash (synthetic)",
+  "severity": "Mild",
+  "symptomDays": 2,
+  "ageGroup": "Adult",
+  "redFlagBreathing": false,
+  "redFlagChestPain": false
+}

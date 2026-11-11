@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_order_priority" name="Order Priority" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <decision id="order_priority" name="Order Priority">
+    <decisionTable id="order_priority_table" hitPolicy="FIRST">
+      <input id="order_priority_in0" label="Order value (INR)"><inputExpression id="order_priority_ie0" typeRef="number"><text>orderTotal</text></inputExpression></input>
+      <input id="order_priority_in1" label="Customer category"><inputExpression id="order_priority_ie1" typeRef="string"><text>customerCategory</text></inputExpression></input>
+      <input id="order_priority_in2" label="Delivery preference"><inputExpression id="order_priority_ie2" typeRef="string"><text>deliveryPreference</text></inputExpression></input>
+      <output id="order_priority_out0" label="Priority" name="priority" typeRef="string" />
+      <output id="order_priority_out1" label="SLA hours" name="slaHours" typeRef="number" />
+      <rule id="order_priority_r1">
+        <description>R1: same-day delivery is always urgent</description>
+        <inputEntry id="order_priority_r1_i0"><text></text></inputEntry>
+        <inputEntry id="order_priority_r1_i1"><text></text></inputEntry>
+        <inputEntry id="order_priority_r1_i2"><text>"Same-day"</text></inputEntry>
+        <outputEntry id="order_priority_r1_o0"><text>"Urgent"</text></outputEntry>
+        <outputEntry id="order_priority_r1_o1"><text>4</text></outputEntry>
+      </rule>
+      <rule id="order_priority_r2">
+        <description>R2: high-value express order</description>
+        <inputEntry id="order_priority_r2_i0"><text>&gt;= 50000</text></inputEntry>
+        <inputEntry id="order_priority_r2_i1"><text></text></inputEntry>
+        <inputEntry id="order_priority_r2_i2"><text>"Express"</text></inputEntry>
+        <outputEntry id="order_priority_r2_o0"><text>"Urgent"</text></outputEntry>
+        <outputEntry id="order_priority_r2_o1"><text>4</text></outputEntry>
+      </rule>
+      <rule id="order_priority_r3">
+        <description>R3: other express orders</description>
+        <inputEntry id="order_priority_r3_i0"><text></text></inputEntry>
+        <inputEntry id="order_priority_r3_i1"><text></text></inputEntry>
+        <inputEntry id="order_priority_r3_i2"><text>"Express"</text></inputEntry>
+        <outputEntry id="order_priority_r3_o0"><text>"High"</text></outputEntry>
+        <outputEntry id="order_priority_r3_o1"><text>24</text></outputEntry>
+      </rule>
+      <rule id="order_priority_r4">
+        <description>R4: Gold customers get high priority even on standard delivery</description>
+        <inputEntry id="order_priority_r4_i0"><text></text></inputEntry>
+        <inputEntry id="order_priority_r4_i1"><text>"Gold"</text></inputEntry>
+        <inputEntry id="order_priority_r4_i2"><text>"Standard"</text></inputEntry>
+        <outputEntry id="order_priority_r4_o0"><text>"High"</text></outputEntry>
+        <outputEntry id="order_priority_r4_o1"><text>24</text></outputEntry>
+      </rule>
+      <rule id="order_priority_r5">
+        <description>R5: high-value standard order</description>
+        <inputEntry id="order_priority_r5_i0"><text>&gt;= 50000</text></inputEntry>
+        <inputEntry id="order_priority_r5_i1"><text></text></inputEntry>
+        <inputEntry id="order_priority_r5_i2"><text>"Standard"</text></inputEntry>
+        <outputEntry id="order_priority_r5_o0"><text>"High"</text></outputEntry>
+        <outputEntry id="order_priority_r5_o1"><text>24</text></outputEntry>
+      </rule>
+      <rule id="order_priority_r6">
+        <description>R6: everything else</description>
+        <inputEntry id="order_priority_r6_i0"><text></text></inputEntry>
+        <inputEntry id="order_priority_r6_i1"><text></text></inputEntry>
+        <inputEntry id="order_priority_r6_i2"><text></text></inputEntry>
+        <outputEntry id="order_priority_r6_o0"><text>"Normal"</text></outputEntry>
+        <outputEntry id="order_priority_r6_o1"><text>72</text></outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI><dmndi:DMNDiagram id="DMNDiagram_1">
+    <dmndi:DMNShape id="DMNShape_1" dmnElementRef="order_priority"><dc:Bounds height="80" width="180" x="150" y="80" /></dmndi:DMNShape>
+  </dmndi:DMNDiagram></dmndi:DMNDI>
+</definitions>

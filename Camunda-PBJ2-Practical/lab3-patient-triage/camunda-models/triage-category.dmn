@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_triage_category" name="Triage Category (educational)" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <decision id="triage_category" name="Triage Category">
+    <decisionTable id="triage_category_table" hitPolicy="FIRST">
+      <input id="triage_category_in0" label="Breathing difficulty flag"><inputExpression id="triage_category_ie0" typeRef="boolean"><text>redFlagBreathing</text></inputExpression></input>
+      <input id="triage_category_in1" label="Chest pain flag"><inputExpression id="triage_category_ie1" typeRef="boolean"><text>redFlagChestPain</text></inputExpression></input>
+      <input id="triage_category_in2" label="Symptom severity"><inputExpression id="triage_category_ie2" typeRef="string"><text>severity</text></inputExpression></input>
+      <input id="triage_category_in3" label="Symptom duration (days)"><inputExpression id="triage_category_ie3" typeRef="number"><text>symptomDays</text></inputExpression></input>
+      <input id="triage_category_in4" label="Age group"><inputExpression id="triage_category_ie4" typeRef="string"><text>ageGroup</text></inputExpression></input>
+      <output id="triage_category_out0" label="Triage category" name="triageCategory" typeRef="string" />
+      <output id="triage_category_out1" label="Rationale" name="rationale" typeRef="string" />
+      <rule id="triage_category_r1">
+        <description>R1: educational rule - breathing red flag</description>
+        <inputEntry id="triage_category_r1_i0"><text>true</text></inputEntry>
+        <inputEntry id="triage_category_r1_i1"><text></text></inputEntry>
+        <inputEntry id="triage_category_r1_i2"><text></text></inputEntry>
+        <inputEntry id="triage_category_r1_i3"><text></text></inputEntry>
+        <inputEntry id="triage_category_r1_i4"><text></text></inputEntry>
+        <outputEntry id="triage_category_r1_o0"><text>"Urgent Assessment"</text></outputEntry>
+        <outputEntry id="triage_category_r1_o1"><text>"Breathing difficulty red flag"</text></outputEntry>
+      </rule>
+      <rule id="triage_category_r2">
+        <description>R2: educational rule - chest pain red flag</description>
+        <inputEntry id="triage_category_r2_i0"><text></text></inputEntry>
+        <inputEntry id="triage_category_r2_i1"><text>true</text></inputEntry>
+        <inputEntry id="triage_category_r2_i2"><text></text></inputEntry>
+        <inputEntry id="triage_category_r2_i3"><text></text></inputEntry>
+        <inputEntry id="triage_category_r2_i4"><text></text></inputEntry>
+        <outputEntry id="triage_category_r2_o0"><text>"Urgent Assessment"</text></outputEntry>
+        <outputEntry id="triage_category_r2_o1"><text>"Chest pain red flag"</text></outputEntry>
+      </rule>
+      <rule id="triage_category_r3">
+        <description>R3: severe symptoms need staff review</description>
+        <inputEntry id="triage_category_r3_i0"><text></text></inputEntry>
+        <inputEntry id="triage_category_r3_i1"><text></text></inputEntry>
+        <inputEntry id="triage_category_r3_i2"><text>"Severe"</text></inputEntry>
+        <inputEntry id="triage_category_r3_i3"><text></text></inputEntry>
+        <inputEntry id="triage_category_r3_i4"><text></text></inputEntry>
+        <outputEntry id="triage_category_r3_o0"><text>"Priority Review"</text></outputEntry>
+        <outputEntry id="triage_category_r3_o1"><text>"Severe symptoms"</text></outputEntry>
+      </rule>
+      <rule id="triage_category_r4">
+        <description>R4: persistent moderate symptoms</description>
+        <inputEntry id="triage_category_r4_i0"><text></text></inputEntry>
+        <inputEntry id="triage_category_r4_i1"><text></text></inputEntry>
+        <inputEntry id="triage_category_r4_i2"><text>"Moderate"</text></inputEntry>
+        <inputEntry id="triage_category_r4_i3"><text>&gt;= 7</text></inputEntry>
+        <inputEntry id="triage_category_r4_i4"><text></text></inputEntry>
+        <outputEntry id="triage_category_r4_o0"><text>"Priority Review"</text></outputEntry>
+        <outputEntry id="triage_category_r4_o1"><text>"Moderate symptoms lasting a week or more"</text></outputEntry>
+      </rule>
+      <rule id="triage_category_r5">
+        <description>R5: vulnerable age group</description>
+        <inputEntry id="triage_category_r5_i0"><text></text></inputEntry>
+        <inputEntry id="triage_category_r5_i1"><text></text></inputEntry>
+        <inputEntry id="triage_category_r5_i2"><text>"Moderate"</text></inputEntry>
+        <inputEntry id="triage_category_r5_i3"><text></text></inputEntry>
+        <inputEntry id="triage_category_r5_i4"><text>"Child","Senior"</text></inputEntry>
+        <outputEntry id="triage_category_r5_o0"><text>"Priority Review"</text></outputEntry>
+        <outputEntry id="triage_category_r5_o1"><text>"Moderate symptoms in child or senior"</text></outputEntry>
+      </rule>
+      <rule id="triage_category_r6">
+        <description>R6: default - routine</description>
+        <inputEntry id="triage_category_r6_i0"><text></text></inputEntry>
+        <inputEntry id="triage_category_r6_i1"><text></text></inputEntry>
+        <inputEntry id="triage_category_r6_i2"><text></text></inputEntry>
+        <inputEntry id="triage_category_r6_i3"><text></text></inputEntry>
+        <inputEntry id="triage_category_r6_i4"><text></text></inputEntry>
+        <outputEntry id="triage_category_r6_o0"><text>"Routine"</text></outputEntry>
+        <outputEntry id="triage_category_r6_o1"><text>"No urgency indicators"</text></outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI><dmndi:DMNDiagram id="DMNDiagram_1">
+    <dmndi:DMNShape id="DMNShape_1" dmnElementRef="triage_category"><dc:Bounds height="80" width="180" x="150" y="80" /></dmndi:DMNShape>
+  </dmndi:DMNDiagram></dmndi:DMNDI>
+</definitions>

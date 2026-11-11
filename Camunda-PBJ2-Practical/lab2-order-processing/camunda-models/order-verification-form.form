@@ -1,0 +1,60 @@
+{
+  "components": [
+    {
+      "text": "# Manual order verification\nThis order met the high-value condition (total >= INR 50,000).",
+      "type": "text",
+      "id": "Field_025"
+    },
+    {
+      "label": "Order reference",
+      "type": "textfield",
+      "id": "Field_026",
+      "key": "orderRef",
+      "readonly": true
+    },
+    {
+      "label": "Customer",
+      "type": "textfield",
+      "id": "Field_027",
+      "key": "customerRef",
+      "readonly": true
+    },
+    {
+      "label": "Order total (INR)",
+      "type": "number",
+      "id": "Field_028",
+      "key": "orderTotal",
+      "readonly": true
+    },
+    {
+      "label": "Verification decision",
+      "type": "select",
+      "id": "Field_029",
+      "key": "verificationDecision",
+      "values": [
+        {
+          "label": "Approved",
+          "value": "Approved"
+        },
+        {
+          "label": "Rejected",
+          "value": "Rejected"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Comment",
+      "type": "textarea",
+      "id": "Field_030",
+      "key": "verificationComment"
+    }
+  ],
+  "type": "default",
+  "id": "order-verification-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}

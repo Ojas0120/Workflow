@@ -1,0 +1,11 @@
+{
+  "applicantId": "APP-1001",
+  "applicantName": "Asha Raman",
+  "age": 32,
+  "requestedAmount": 500000,
+  "loanTermMonths": 60,
+  "monthlyIncome": 120000,
+  "existingMonthlyDebt": 10000,
+  "employmentYears": 5,
+  "simulateWorkerFailure": false
+}

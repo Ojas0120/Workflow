@@ -1,0 +1,74 @@
+{
+  "components": [
+    {
+      "text": "# Manual loan review",
+      "type": "text",
+      "id": "Field_011"
+    },
+    {
+      "label": "Applicant ID",
+      "type": "textfield",
+      "id": "Field_012",
+      "key": "applicantId",
+      "readonly": true
+    },
+    {
+      "label": "Applicant name",
+      "type": "textfield",
+      "id": "Field_013",
+      "key": "applicantName",
+      "readonly": true
+    },
+    {
+      "label": "Requested amount (INR)",
+      "type": "number",
+      "id": "Field_014",
+      "key": "requestedAmount",
+      "readonly": true
+    },
+    {
+      "label": "Credit score (may be empty if the credit API failed)",
+      "type": "number",
+      "id": "Field_015",
+      "key": "creditScore",
+      "readonly": true
+    },
+    {
+      "label": "Debt-to-income ratio",
+      "type": "number",
+      "id": "Field_016",
+      "key": "dtiRatio",
+      "readonly": true
+    },
+    {
+      "label": "Reviewer decision",
+      "type": "select",
+      "id": "Field_017",
+      "key": "reviewerDecision",
+      "values": [
+        {
+          "label": "Approved",
+          "value": "Approved"
+        },
+        {
+          "label": "Rejected",
+          "value": "Rejected"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Reviewer comment",
+      "type": "textarea",
+      "id": "Field_018",
+      "key": "reviewerComment"
+    }
+  ],
+  "type": "default",
+  "id": "loan-manual-review-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}

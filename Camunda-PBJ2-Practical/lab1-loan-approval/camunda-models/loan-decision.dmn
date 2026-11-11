@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_loan_decision" name="Loan Decision" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <decision id="loan_decision" name="Loan Decision">
+    <decisionTable id="loan_decision_table" hitPolicy="FIRST">
+      <input id="loan_decision_in0" label="Credit score"><inputExpression id="loan_decision_ie0" typeRef="number"><text>creditScore</text></inputExpression></input>
+      <input id="loan_decision_in1" label="Debt-to-income ratio"><inputExpression id="loan_decision_ie1" typeRef="number"><text>dtiRatio</text></inputExpression></input>
+      <input id="loan_decision_in2" label="Loan-to-annual-income ratio"><inputExpression id="loan_decision_ie2" typeRef="number"><text>loanToIncomeRatio</text></inputExpression></input>
+      <input id="loan_decision_in3" label="Employment (years)"><inputExpression id="loan_decision_ie3" typeRef="number"><text>employmentYears</text></inputExpression></input>
+      <output id="loan_decision_out0" label="Decision" name="decision" typeRef="string" />
+      <output id="loan_decision_out1" label="Reason" name="reason" typeRef="string" />
+      <rule id="loan_decision_r1">
+        <description>R1: very low credit score -&gt; reject</description>
+        <inputEntry id="loan_decision_r1_i0"><text>&lt; 550</text></inputEntry>
+        <inputEntry id="loan_decision_r1_i1"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r1_i2"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r1_i3"><text></text></inputEntry>
+        <outputEntry id="loan_decision_r1_o0"><text>"Rejected"</text></outputEntry>
+        <outputEntry id="loan_decision_r1_o1"><text>"Credit score below 550"</text></outputEntry>
+      </rule>
+      <rule id="loan_decision_r2">
+        <description>R2: unaffordable debt burden -&gt; reject</description>
+        <inputEntry id="loan_decision_r2_i0"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r2_i1"><text>&gt; 0.5</text></inputEntry>
+        <inputEntry id="loan_decision_r2_i2"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r2_i3"><text></text></inputEntry>
+        <outputEntry id="loan_decision_r2_o0"><text>"Rejected"</text></outputEntry>
+        <outputEntry id="loan_decision_r2_o1"><text>"Debt-to-income ratio above 50%"</text></outputEntry>
+      </rule>
+      <rule id="loan_decision_r3">
+        <description>R3: excessive loan size -&gt; reject</description>
+        <inputEntry id="loan_decision_r3_i0"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r3_i1"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r3_i2"><text>&gt; 5</text></inputEntry>
+        <inputEntry id="loan_decision_r3_i3"><text></text></inputEntry>
+        <outputEntry id="loan_decision_r3_o0"><text>"Rejected"</text></outputEntry>
+        <outputEntry id="loan_decision_r3_o1"><text>"Requested amount exceeds 5x annual income"</text></outputEntry>
+      </rule>
+      <rule id="loan_decision_r4">
+        <description>R4: strong applicant -&gt; approve</description>
+        <inputEntry id="loan_decision_r4_i0"><text>&gt;= 700</text></inputEntry>
+        <inputEntry id="loan_decision_r4_i1"><text>&lt;= 0.35</text></inputEntry>
+        <inputEntry id="loan_decision_r4_i2"><text>&lt;= 3</text></inputEntry>
+        <inputEntry id="loan_decision_r4_i3"><text>&gt;= 2</text></inputEntry>
+        <outputEntry id="loan_decision_r4_o0"><text>"Approved"</text></outputEntry>
+        <outputEntry id="loan_decision_r4_o1"><text>"Meets all automatic approval criteria"</text></outputEntry>
+      </rule>
+      <rule id="loan_decision_r5">
+        <description>R5: catch-all -&gt; manual review</description>
+        <inputEntry id="loan_decision_r5_i0"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r5_i1"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r5_i2"><text></text></inputEntry>
+        <inputEntry id="loan_decision_r5_i3"><text></text></inputEntry>
+        <outputEntry id="loan_decision_r5_o0"><text>"Manual Review"</text></outputEntry>
+        <outputEntry id="loan_decision_r5_o1"><text>"Borderline application - needs officer review"</text></outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI><dmndi:DMNDiagram id="DMNDiagram_1">
+    <dmndi:DMNShape id="DMNShape_1" dmnElementRef="loan_decision"><dc:Bounds height="80" width="180" x="150" y="80" /></dmndi:DMNShape>
+  </dmndi:DMNDiagram></dmndi:DMNDI>
+</definitions>

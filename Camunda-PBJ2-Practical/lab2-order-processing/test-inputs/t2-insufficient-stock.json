@@ -1,0 +1,7 @@
+{
+  "customerRef": "CUST-002",
+  "productId": "PROD-200",
+  "quantity": 10,
+  "deliveryPreference": "Standard",
+  "paymentToken": "tok_test_ok"
+}

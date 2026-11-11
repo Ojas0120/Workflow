@@ -1,0 +1,155 @@
+{
+  "components": [
+    {
+      "text": "# Appointment request (educational simulation)\nSynthetic patients only. Not for real clinical use.",
+      "type": "text",
+      "id": "Field_031"
+    },
+    {
+      "label": "Synthetic patient reference",
+      "type": "textfield",
+      "id": "Field_032",
+      "key": "patientRef",
+      "validate": {
+        "required": true
+      },
+      "description": "Format PT-SYN-0001 ... PT-SYN-9999"
+    },
+    {
+      "label": "Department",
+      "type": "select",
+      "id": "Field_033",
+      "key": "department",
+      "values": [
+        {
+          "label": "General Medicine",
+          "value": "General Medicine"
+        },
+        {
+          "label": "Dermatology",
+          "value": "Dermatology"
+        }
+      ],
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "General Medicine"
+    },
+    {
+      "label": "Preferred date (YYYY-MM-DD)",
+      "type": "textfield",
+      "id": "Field_034",
+      "key": "preferredDate",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Preferred time of day",
+      "type": "select",
+      "id": "Field_035",
+      "key": "timeOfDay",
+      "values": [
+        {
+          "label": "Any",
+          "value": "Any"
+        },
+        {
+          "label": "Morning",
+          "value": "Morning"
+        },
+        {
+          "label": "Afternoon",
+          "value": "Afternoon"
+        }
+      ],
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "Any"
+    },
+    {
+      "label": "Symptoms summary (synthetic)",
+      "type": "textarea",
+      "id": "Field_036",
+      "key": "symptomsSummary",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Symptom severity",
+      "type": "select",
+      "id": "Field_037",
+      "key": "severity",
+      "values": [
+        {
+          "label": "Mild",
+          "value": "Mild"
+        },
+        {
+          "label": "Moderate",
+          "value": "Moderate"
+        },
+        {
+          "label": "Severe",
+          "value": "Severe"
+        }
+      ],
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "Mild"
+    },
+    {
+      "label": "Symptom duration (days)",
+      "type": "number",
+      "id": "Field_038",
+      "key": "symptomDays",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Age group",
+      "type": "select",
+      "id": "Field_039",
+      "key": "ageGroup",
+      "values": [
+        {
+          "label": "Child",
+          "value": "Child"
+        },
+        {
+          "label": "Adult",
+          "value": "Adult"
+        },
+        {
+          "label": "Senior",
+          "value": "Senior"
+        }
+      ],
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "Adult"
+    },
+    {
+      "label": "Red flag: difficulty breathing",
+      "type": "checkbox",
+      "id": "Field_040",
+      "key": "redFlagBreathing"
+    },
+    {
+      "label": "Red flag: chest pain",
+      "type": "checkbox",
+      "id": "Field_041",
+      "key": "redFlagChestPain"
+    }
+  ],
+  "type": "default",
+  "id": "triage-request-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "schemaVersion": 16
+}
